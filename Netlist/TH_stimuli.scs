@@ -1,0 +1,7 @@
+_vVSS (VSS 0) vsource dc=0 type=dc
+_vVDD (VDD 0) vsource dc=0.8 type=dc
+_vIN (IN 0) vsource dc=0.4 mag=0 sinedc=0.4 ampl=0.3 sinephase=0 freq=49.21875M type=sine
+_vIP (IP 0) vsource dc=0.4 mag=0 sinedc=0.4 ampl=-0.3 sinephase=0 freq=49.21875M type=sine
+_vCN (CN 0) vsource dc=0.0 val0=0.8 val1=0 period=10n delay=0 rise=10p fall=10p width=1n type=pulse
+_vCP (CP 0) vsource dc=0.8 val0=0 val1=0.8 period=10n delay=0 rise=10p fall=10p width=1n type=pulse
+_vVCM (VCM 0) vsource dc=0.4 mag=0 type=dc
