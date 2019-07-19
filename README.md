@@ -13,3 +13,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 # Collaborations
+
+This repo is a place to upload project files from collaborations with other POSH performers.
