@@ -10,10 +10,10 @@ Development of the following tools (with links to their corresponding repositori
 Create a directory named after your institution (e.g., University of Southern California --> "USC") and upload any/all collaborative files (e.g., netlists, powerpoint slides, etc.) into that directory.
 
 ## Current contributors:
-Mohsen Hassanpourghadi (USC)
+Mohsen Hassanpourghadi, top contributor (USC), <mhassanp@usc.edu>
 
-Qiaochu Zhang (USC)
+Qiaochu Zhang (USC), <qiaochuz@usc.edu>
 
-Subhajit Dutta Chowdhury (USC)
+Subhajit Dutta Chowdhury (USC), <duttacho@usc.edu>
 
-Walter Unglaub (USC)
+Walter Unglaub (USC), <unglaub@usc.edu>
