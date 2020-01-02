@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+
+# Copyright 2019 USC. All rights reserved.
+# Use of this source code is governed by an Apache 2.0 license that can be 
+# found in the LICENSE file.
+
+import sys
+import os
+from antlr4 import *
+from netlist_parser.SpectreLexer import SpectreLexer
+from netlist_parser.SpectreParser import SpectreParser
+from posh.NetlistListener import *
+from posh.NetlistVisitor import *
+
+
+def listtostring(List):
+    st = ''
+    for i in List:
+        st = st + i
+    return st
+
+
+
+def splitsimulation(file):
+    fp = open(file,'r')
+    lines = fp.readlines()
+    mid = len(lines)
+    for i in range(0,len(lines)):
+        #print(lines[i][0:4])
+        if(lines[i][0:16] == 'simulatorOptions'):
+            mid  = i
+    #print(mid)
+    head_netlist = listtostring(lines[0:mid])
+    simulation_measure = listtostring(lines[mid:len(lines)])
+    return head_netlist,simulation_measure
+
+
+
+def main(argv):
+    input_scs = argv[1]
+    input_div = argv[2]
+
+    input_stream = FileStream(input_scs)
+    head_netlist,simulation_measure = splitsimulation(input_scs)
+    head_netlist_input_stream = InputStream(head_netlist)
+
+    lexer = SpectreLexer(head_netlist_input_stream)
+    #lexer = SpectreLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = SpectreParser(stream)
+    tree = parser.netlist()
+
+    # Using a listener
+    printer = NetlistListener()
+    walker = ParseTreeWalker()
+    walker.walk(printer, tree)
+
+    # Using a visitor
+    visitor = NetlistVisitor_sanitizer(input_scs,input_div)
+    visitor.visit(tree)
+
+    newscs = input_scs.split('.')[0]+'_sanitized'+'.scs'
+    fp = open(newscs,'a')
+    fp.write(simulation_measure)
+    #print(simulation_measure)
+    fp.close()
+
+def usage(argv):
+    error_basic = 'Error Command\nUsage: python sanitizer [netlist.scs] [config]\n'
+    if(len(sys.argv)!=3):
+        print(error_basic)
+    elif(not os.path.isfile(argv[1])):
+        print('Error: File '+argv[1]+ ' does not exist\n')
+    elif(not os.path.isfile(argv[2])):
+        print('Error: File '+argv[2]+ ' does not exist\n')
+    else:
+        main(argv)
+
+
+if __name__ == '__main__':
+    print("1) USC Netlist Sanitizer is an open-source tool for sanitizing the netlists of analog mixed-signal (AMS)\n"
+          "circuits by removing all foundry-proprietary information. This allows AMS designers to accelerate\n" 
+          "innovation by open-sourcing their new designs to share with the wider community. Other designers can\n"
+          "use the sanitized netlists in conjunction with a predictive or a foundry-proprietary PDK. The USC team is\n"
+          "developing a de-sanitizer to facilitate this.\n"
+          "This version of the sanitizer works with SCS netlist format.\n"
+          "2) USC Netlist Sanitizer uses a configuration file to decide what information in the original netlist to\n"
+          "keep, what to remove, and what to modify. Please review and UPDATE the default configuration file:\n"
+	      "\t posh/bin/v1_sanitizer_TSMC65nm.config\n"		
+	      "\t posh/bin/v2_sanitizer_TSMC65nm.config\n"
+          "The instructions on how to update are provided at the top of the default configuration file.\n"
+          "3) Also, please carefully review the netlist file output by the sanitizer to double-check that it does not \n"
+          "include any proprietary information. (If it does, further update the configuration file and repeat until the \n"
+          "output netlist file is free of proprietary information.)\n"
+          "4) If you have any questions, please contact us at\n"
+	      "\t uscposh@ee.usc.edu \n")
+    usage(sys.argv)

@@ -1,0 +1,119 @@
+#!/usr/bin/env python
+
+# Copyright 2019 USC. All rights reserved.
+# Use of this source code is governed by an Apache 2.0 license that can be 
+# found in the LICENSE file.
+
+import sys
+import os
+from antlr4 import *
+from netlist_parser.SpectreLexer import SpectreLexer
+from netlist_parser.SpectreParser import SpectreParser
+from posh.NetlistListener import *
+from posh.NetlistVisitor import *
+
+#as = l+w+nf+1
+#ad = multi-nf-sigma -2
+#pd = sigma*3*l*w
+
+
+def listtostring(List):
+    st = ''
+    for i in List:
+        st = st + i
+    return st
+
+def splitsimulation(file):
+    fp = open(file,'r')
+    lines = fp.readlines()
+    mid = len(lines)
+    for i in range(0,len(lines)):
+        #print(lines[i][0:4])
+        if(lines[i][0:16] == 'simulatorOptions'):
+            mid  = i
+    #print(mid)
+    head_netlist = listtostring(lines[0:mid])
+    simulation_measure = listtostring(lines[mid:len(lines)])
+    return head_netlist,simulation_measure
+
+# Parse the formula in config file
+# return the expression list
+# Example: input a = b + c -> return ['b','+','c'] 
+def getassignmentList(assignmentinput):
+    #inputstrean transform
+    input_stream = InputStream(assignmentinput)
+    
+    #parsing
+    lexer = SpectreLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = SpectreParser(stream)
+    tree = parser.paramList()
+    
+    # Using a visitor
+    visitor = AssignmentVisitor()
+    assignmentList = visitor.visit(tree)
+    
+    return assignmentList
+
+def getassignmentdict(input_div):
+    fp = open(input_div,'r')
+    dict_assign = {}
+    lines = fp.readlines()
+    i = 0
+    while(i < len(lines)):
+        line = lines[i]
+        if(line[0:2] != '//'):
+            temp_str = line.split(',')
+            div_name = temp_str[0]
+            num_assignemnt = int(temp_str[2])
+            if(num_assignemnt != 0 ):
+                assignmentinput = listtostring(lines[i+1:i+num_assignemnt+1])
+                i = i + num_assignemnt
+                dict_assign[div_name] = getassignmentList(assignmentinput)
+        i = i + 1
+    fp.close()
+    return dict_assign
+
+def main(argv):
+    input_scs = argv[1]
+    input_div = argv[2]
+
+    input_stream = FileStream(input_scs)
+    head_netlist,simulation_measure = splitsimulation(input_scs)
+    #print(head_netlist)
+    head_netlist_input_stream = InputStream(head_netlist)
+
+    # Get assignment from config file 
+    dict_assign = getassignmentdict(input_div)
+
+
+    # Visit sanitized file with NetlistVisitor_desanitizer
+    lexer = SpectreLexer(head_netlist_input_stream)
+    #lexer = SpectreLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = SpectreParser(stream)
+    tree = parser.netlist()
+
+    # Using a visitor
+    visitor = NetlistVisitor_desanitizer(input_scs,dict_assign)
+    visitor.visit(tree)
+
+    # Append rest file
+    newscs = input_scs.split('sanitized')[0]+'desanitized'+'.scs'
+    fp = open(newscs,'a')
+    fp.write(simulation_measure)
+    fp.close()
+
+def usage(argv):
+    error_basic = 'Error Command\nUsage: python desanitizer [netlist_sanitized.scs] [config]\n'
+    if(len(sys.argv)!=3):
+        print(error_basic)
+    elif(not os.path.isfile(argv[1])):
+        print('Error: File '+argv[1]+ ' does not exist\n')
+    elif(not os.path.isfile(argv[2])):
+        print('Error: File '+argv[2]+ ' does not exist\n')
+    else:
+        main(argv)
+
+if __name__ == '__main__':
+    usage(sys.argv)

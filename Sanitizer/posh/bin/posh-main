@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+
+# Copyright 2019 USC. All rights reserved.
+# Use of this source code is governed by an Apache 2.0 license that can be 
+# found in the LICENSE file.
+
+import sys
+from antlr4 import *
+from netlist_parser.SpectreLexer import SpectreLexer
+from netlist_parser.SpectreParser import SpectreParser
+from posh.NetlistListener import NetlistListener
+from posh.NetlistVisitor import NetlistVisitor
+
+
+def main(argv):
+    input_stream = FileStream(argv[1])
+    input_div = argv[2]
+    lexer = SpectreLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = SpectreParser(stream)
+    tree = parser.netlist()
+
+    # Using a listener
+    printer = NetlistListener()
+    walker = ParseTreeWalker()
+    walker.walk(printer, tree)
+
+    print
+    print
+
+    # Using a visitor
+    visitor = NetlistVisitor(input_div)
+    visitor.visit(tree)
+
+
+if __name__ == '__main__':
+    main(sys.argv)
