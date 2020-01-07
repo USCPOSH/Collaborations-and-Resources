@@ -16,4 +16,4 @@ limitations under the License.
 
 This repo is a place to upload project files from collaborations with other POSH performers.
 
-<img src="Summary_of_predictive_models.png">
+<img src="Documentation/images/Summary_of_predictive_models.png">
