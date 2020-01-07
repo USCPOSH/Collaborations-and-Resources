@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 # Collaborations and Resources
-
 This repo is a place to upload project files from collaborations with other POSH performers.
 
+# Summary of Predictive Models
 <img src="Documentation/images/Summary_of_predictive_models.png">
