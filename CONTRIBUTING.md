@@ -14,6 +14,6 @@ Mohsen Hassanpourghadi, top contributor (USC), <mhassanp@usc.edu>
 
 Qiaochu Zhang (USC), <qiaochuz@usc.edu>
 
-Subhajit Dutta Chowdhury (USC), <duttacho@usc.edu>
+Mutian Zhu (USC), <mutianzh@usc.edu>
 
 Walter Unglaub (USC), <unglaub@usc.edu>
