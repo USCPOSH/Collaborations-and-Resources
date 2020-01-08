@@ -11,8 +11,13 @@ Create a directory named after your institution (e.g., University of Southern Ca
 
 ## Current contributors:
 Mohsen Hassanpourghadi, top contributor (USC), <mhassanp@usc.edu>
+
 Rajiv Mayani (ISI), <mayani@isi.edu>
+
 Zhenyu Li (USC), <zhenyuli@usc.edu>
+
 Qiaochu Zhang (USC), <qiaochuz@usc.edu>
+
 Mutian Zhu (USC), <mutianzh@usc.edu>
+
 Walter Unglaub (USC), <unglaub@usc.edu>
