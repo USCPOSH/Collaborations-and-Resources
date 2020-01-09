@@ -6,7 +6,7 @@ If interested in contributing, please reach out to Rajiv Mayani: <mayani@isi.edu
 
 Rajiv Mayani, top contributor (ISI), <mayani@usc.edu>
 
-Zhenyu (USC), <zhenyuli@usc.edu>
+Zhenyu Li (USC), <zhenyuli@usc.edu>
 
 Mutian Zhu (USC), <mutianzh@usc.edu>
 
