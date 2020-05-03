@@ -12,5 +12,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-#To access the set of tutorial files for EE536B, please click on the following link:
+# To access the set of tutorial files for EE536B, please click on the following link:
 https://github.com/USCPOSH/AMPSE/tree/master/EE536B_tutorial
